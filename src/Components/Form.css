@@ -1,0 +1,155 @@
+.form-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: start;
+   
+
+  }
+
+  .icerik-container {
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-start; 
+    padding-top: 20px;
+  }
+
+  .navbar {
+    width: 100%;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #e12301;
+    color: white;
+    
+  }
+
+  .direction{
+    display: flex;
+    flex-direction: row;
+    
+  }
+
+  .direction a{
+    color:white;
+    padding: 20px;
+    text-decoration: none;
+  }
+
+  .option{
+    width: 58%;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+ }
+  
+  .order-title {
+    padding-bottom: 10px;
+    font-size: 3.5rem;
+  }
+
+  
+  
+   #size-dropdown {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    border: none;
+    padding: 5px;
+    width: 200px;
+    height: 30px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+
+  #dough-dropdown {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    border: none;
+    padding: 5px;
+    width: 200px;
+    height: 30px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+
+ 
+  
+
+  #quantity{
+    text-align: center;
+    width: 40px;
+   
+  }
+  
+  .toppings-title {
+    font-size: 2.5rem;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    
+  }
+  
+  .toppings {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .toppings div div {
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .toppings div div label {
+    font-size: 1.5rem;
+  }
+  
+  .toppings-1 {
+    margin-right: 20px;
+  }
+  
+  #name-input {
+    width: 300px;
+    height: 20px;
+    border: none;
+    padding: 5px 15px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    text-align: center;
+  }
+
+  #special-text {
+    width: 300px;
+    height: 20px;
+    border: none;
+    padding: 5px 15px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    text-align: center;
+  }
+
+  #order-button {
+    margin-top: 40px;
+    border: none;
+    padding: 15px 25px;
+    
+    font-family: "Italianno", sans-serif;
+    font-size: 1.5rem;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color: #FDC913;
+    color: white;
+    transition: all 0.5s ease;
+    cursor: pointer;
+  }
+  
+  #order-button:hover {
+    background-color: #FDC913;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  }
+  
+  .error-msg {
+    color: #e12301;
+    font-size: 1.5rem;
+    padding-top: 5px;
+  }
