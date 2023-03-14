@@ -39,13 +39,12 @@
     text-decoration: none;
   }
 
-  .option{
-    width: 58%;
-    padding-top: 20px;
+  .radio{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
- }
+    flex-direction: column;
+  }
+
+ 
   
   .order-title {
     padding-bottom: 10px;
@@ -53,8 +52,7 @@
   }
 
   
-  
-   #size-dropdown {
+   #dough-dropdown {
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
@@ -63,53 +61,9 @@
     width: 200px;
     height: 30px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  }
-
-  #dough-dropdown {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    border: none;
-    padding: 5px;
-    width: 200px;
-    height: 30px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  }
+  } 
 
  
-  
-
-  #quantity{
-    text-align: center;
-    width: 40px;
-   
-  }
-  
-  .toppings-title {
-    font-size: 2.5rem;
-    padding-top: 10px;
-    padding-bottom: 20px;
-    
-  }
-  
-  .toppings {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .toppings div div {
-    width: 200px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .toppings div div label {
-    font-size: 1.5rem;
-  }
-  
-  .toppings-1 {
-    margin-right: 20px;
-  }
   
   #name-input {
     width: 300px;
@@ -120,14 +74,25 @@
     text-align: center;
   }
 
-  #special-text {
+   #special-text {
     width: 300px;
     height: 20px;
     border: none;
     padding: 5px 15px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     text-align: center;
+  } 
+
+
+  .count{
+    width: 2px;
+    display: flex;
+
+    flex-direction: row;
   }
+
+
+
 
   #order-button {
     margin-top: 40px;

@@ -1,162 +1,387 @@
-import React from "react";
-import {NavLink, Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, Link } from "react-router-dom";
 import "./Form.css";
-
-      const Form = (props) => {
-        const { form, setForm, submit, validate, errors } = props;
-
-
-      const onSubmit = (event) => {
-        event.preventDefault();
-        submit();
-    }  
+import * as yup from "yup";
+import {
+  FormGroup, CardTitle, Card, CardText,
+  ButtonToolbar, ButtonGroup, Button, Input, Label, Col
+} from "reactstrap"
 
 
-      const handleChange = (event) => {
-        const { type, name, value, checked } = event.target;
 
-        const valueToUse = type === "checkbox" ? checked : value;
-        validate(name, valueToUse);
-        setForm({ ...form, [name]: valueToUse });
-      };
-  
-      
+const initialValues = {
+  name: "",
+  size: "",
+  dough: "",
+  instructions: "",
+  adet: 1,
+  ücret: 85.50,
+  ekücret: ""
+}
 
-      return (
+const initialErrors = {
+  name: "",
+  size: "",
+  dough: "",
+  instructions: "",
+  adet: "",
+  ücret: "",
+  ekücret: ""
+}
 
-      
+
+const seçenekler = [
+  "pepperoni",
+  "sosis",
+  "Jambon",
+  "Tavuk",
+  "soğan",
+  "domates",
+  "mısır",
+  "sucuk",
+  "jalepeno",
+  "sarımsak",
+  "biber",
+  "kabak",
+  "salam",
+];
 
 
-      <form id="pizza-form" className="form-container" onSubmit={onSubmit}>
+const Form = () => {
+
+  const [data, setData] = useState(initialValues);
+  const [errors, setErrors] = useState(initialErrors);
+  const [disabled, setDisabled] = useState(true);
+  const [submit, setSubmit] = useState(false)
+
+  const validate = (name, value) => {
+
+    yup
+      .reach(schema, name)
+      .validate(value)
+      .then(() => {
+        setErrors({
+          ...errors,
+          [name]: "",
+        });
+      })
+      .catch((err) => {
+        setErrors({
+          ...errors,
+          [name]: err.errors[0],
+        });
+      });
+  }
+
+
+  useEffect(() => {
+    schema.isValid(data).then((valid) => setDisabled(!valid));
+  }, [data]);
+
+
+  const schema = yup.object().shape({
+    name: yup
+      .string()
+      .required("bu alanı doldurmak zorunludur.")
+      .min(2, "isim en az 2 karakter olmalıdır"),
+    size: yup
+      .mixed()
+      .oneOf(["Küçük", "Orta", "Büyük"], "Bir tanesini seçmelisiniz.")
+      .required("Seçim yapınız"),
+    dough: yup
+      .mixed()
+      .oneOf(
+        ["ince", "orta", "kalın"],
+        "Bir tanesini seçmelisiniz."
+      )
+      .required("Seçim yapınız"),
+
+    // pepperoni: yup.boolean().oneOf([true, false], ""),
+    // sosis: yup.boolean().oneOf([true, false], ""),
+    // Jambon: yup.boolean().oneOf([true, false], ""),
+    // tavuk: yup.boolean().oneOf([true, false], ""),
+    // soğan: yup.boolean().oneOf([true, false], ""),
+    // domates: yup.boolean().oneOf([true, false], ""),
+    // mısır: yup.boolean().oneOf([true, false], ""),
+    // sucuk: yup.boolean().oneOf([true, false], ""),
+    // jalepeno: yup.boolean().oneOf([true, false], ""),
+    // sarımsak: yup.boolean().oneOf([true, false], ""),
+    // biber: yup.boolean().oneOf([true, false], ""),
+    // ananas: yup.boolean().oneOf([true, false], ""),
+    // kabak: yup.boolean().oneOf([true, false], ""),
+    // salam: yup.boolean().oneOf([true, false], ""),
+    // instructions: yup.string(),
+
+    adet: yup
+      .number()
+      .required("fazla seçim yapabilirsiniz.")
+      .min(1, "Bir adetten fazla seçebilirsiniz"),
+
+    ücret: yup
+      .number()
+      .required()
+      .min(85.50, "Ek seçeneklerle fiyat artacaktır."),
+
+    ekücret: yup
+      .number()
+      .required()
+      .min(0, "Seçimleriniz fiyata eklenecektir."),
+
+  });
+
+  const [price, setPrice] = useState(data.ücret);
+  const [counter, setCounter] = useState(1);
+  const [malzemeSayısı, setMalzemeSayısı] = useState(0);
+  const perCost = 5;
+  const ekücret = perCost * malzemeSayısı
+  const totalPrice = (ekücret + price) * counter
+
+
+
+  const setCheck = (e) => {
+    setData({ ...data, [e.target.name]: e.target.checked });
+    if (e.target.checked === true) {
+      setMalzemeSayısı(malzemeSayısı + 1);
+      setPrice(price + perCost);
+    } else {
+      setMalzemeSayısı(malzemeSayısı - 1);
+      setPrice(price - perCost);
+    }
+
+  }
+
+
+  useEffect(() => {
+  }, [data]);
+
+  useEffect(() => {
+    setData({ ...data, count: counter });
+  }, [counter]);
+
+
+  useEffect(() => {
+    setData({
+      ...data,
+      price: price,
+      ekücret: malzemeSayısı * perCost
+    });
+  }, [totalPrice]);
+
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    submit();
+  }
+
+
+
+  const arttır = (e) => {
+    setCounter(counter + 1)
+  }
+
+  const azalt = (e) => {
+    if (counter >= 1)
+      setCounter(counter - 1)
+    if (counter <= 1)
+      setCounter(1)
+  }
+
+
+
+  return (
+    <form id="pizza-form" className="form-container" onSubmit={onSubmit}>
       <div className="navbar">
-      <h1 className="order-title">Pizza Siparişi</h1>
-      <div className="direction">
-      <NavLink className="links" to="/">
+        <h1 className="order-title">Pizza Siparişi</h1>
+        <div className="direction">
+          <NavLink className="links" to="/">
             Anasayfa
           </NavLink>
+
+          <NavLink className="seçenekler" to="/pizza">
+            Seçenekler
+          </NavLink>
+
           <NavLink id="order-pizza" className="links" to="/pizza">
             Sipariş oluştur
           </NavLink>
-          </div>
-          </div>
-
-<div className="icerik-container">
-        <div className="isim">
-      <label className="label" htmlFor="name-input">
-        İsim:
-      </label>
-      <input type="text" id="name-input" name="name" value={form.name} onChange={handleChange} />
-      <div className="error-msg">{errors.name}</div>
-      </div>
-
-    
-      <div className="option">
-      <label className="label" htmlFor="size-dropdown">
-        Boy:
-      </label>
-      <select id="size-dropdown" name="size" value={form.size} onChange={handleChange}>
-        <option value="">---Hangi boy olsun?---</option>
-        <option value="küçük">Küçük</option>
-        <option value="orta">Orta</option>
-        <option value="büyük">Büyük</option>
-        
-      </select>
-      <label className="label" htmlFor="dough-dropdown">
-        Hamur:
-      </label>
-      <select id="dough-dropdown" name="dough" value={form.dough} onChange={handleChange}>
-        <option value="">---Hangi hamur olsun?---</option>
-        <option value="ince">İnce</option>
-        <option value="orta">Orta</option>
-        <option value="kalın">Kalın</option>
-        
-      </select>
-      </div>
-      <div className="error-msg">{errors.size}</div>
-      <p className="toppings-title">İçindekiler:</p>
-      <div className="toppings">
-        <div className="toppings-1">
-          <div>
-            <label htmlFor="pepperoni">Pepperoni</label>
-            <input type="checkbox" id="pepperoni" name="pepperoni" checked={form.pepperoni} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="sosis">Sosis</label>
-            <input type="checkbox" id="sosis" name="sosis" checked={form.sosis} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="Jambon">Jambon</label>
-            <input type="checkbox" id="Jambon" name="Jambon" checked={form.Jambon} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="tavuk">Tavuk</label>
-            <input type="checkbox" id="tavuk" name="tavuk" checked={form.Tavuk} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="soğan">Soğan</label>
-            <input type="checkbox" id="soğan" name="soğan" checked={form.soğan} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="domates">Domates</label>
-            <input type="checkbox" id="domates" name="domates" checked={form.domates} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="mısır">Mısır</label>
-            <input type="checkbox" id="mısır" name="mısır" checked={form.mısır} onChange={handleChange} />
-          </div>
         </div>
-        <div className="toppings-2">
-          <div>
-            <label htmlFor="sucuk">Sucuk</label>
-            <input type="checkbox" id="sucuk" name="sucuk" checked={form.sucuk} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="jalepeno">Jalepeno</label>
-            <input type="checkbox" id="jalepeno" name="jalepeno" checked={form.jalepeno} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="sarımsak">Sarımsak</label>
-            <input type="checkbox" id="sarımsak" name="sarımsak" checked={form.sarımsak} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="biber">Biber</label>
-            <input type="checkbox" id="biber" name="biber" checked={form.biber} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="ananas">Ananas</label>
-            <input type="checkbox" id="ananas" name="ananas" checked={form.ananas} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="kabak">Kabak</label>
-            <input type="checkbox" id="kabak" name="kabak" checked={form.kabak} onChange={handleChange} />
-          </div>
-          <div>
-            <label htmlFor="salam">Salam</label>
-            <input type="checkbox" id="salam" name="salam" checked={form.salam} onChange={handleChange} />
-          </div>
-           </div>
-           </div>
-           <hr />
+      </div>
 
-           
-           <label className="label" htmlFor="special-text">
-        Sipariş Notu
-      </label>
-       <input type="text" id="special-text" name="instructions" placeholder="Siparişine eklemek istediğin bir not var mı?" value={form.instructions} onChange={handleChange} />
-          
-           
-     
-      <label htmlFor="quantity">Adet:</label>
-     <input type="number" id="quantity" name="quantity" placeholder="1" min="1" max="5" />
+      <div className="icerik-container">
+        <div className="pizza-info">
+          Position Absolute Pizza
+        </div>
 
-     </div>
+
+        <FormGroup>
+          <Label htmlFor="name-input">
+            isim:
+          </Label>
+          <Input
+            id="name-input"
+            name="name"
+            placeholder="isim yazınız"
+            type="text"
+          />
+        </FormGroup>
+
+        {/*         
+        <div className="radio" >
+          <label htmlFor="kucuk">
+            <input id="kucuk" type="radio" name="boyut" />
+            Küçük
+          </label>
+        </div>
+        <div className="radio" >
+          <label htmlFor="orta">
+            <input id="orta" type="radio" name="boyut"  />
+            Orta
+          </label>
+        </div>
+        <div className="radio"  >
+          <label htmlFor="büyük">
+            <input id="büyük" type="radio" name="boyut"  />
+            Büyük
+          </label>
+        </div> */}
+
+        <p>Boy:</p>
+
+        <FormGroup check>
+          <Label check>
+            <Input type="radio" name="radio1" /> kücük
+          </Label>
+        </FormGroup>
+        <FormGroup check>
+          <Label check>
+            <Input type="radio" name="radio1" /> orta
+          </Label>
+        </FormGroup>
+        <FormGroup check>
+          <Label check>
+            <Input type="radio" name="radio1" /> büyük
+          </Label>
+        </FormGroup>
+
+
+        {/* <label className="label" htmlFor="dough-dropdown">
+          Hamur:
+        </label>
+        <select id="dough-dropdown" name="dough" value={data.dough} onChange={handleChange}>
+          <option value="">---Hangi hamur olsun?---</option>
+          <option value="ince">İnce</option>
+          <option value="orta">Orta</option>
+          <option value="kalın">Kalın</option>
+
+        </select> */}
+
+        <FormGroup row>
+          <Label
+            htmlFor="dough-dropdown"
+
+            sm={2}
+          >
+            Hamur:
+          </Label>
+          <Col sm={20}>
+            <Input
+              id="dough-dropdown"
+              name="select"
+              type="select"
+              placeholder="---Hangi hamur olsun?---"
+            >
+              <option value="ince">
+                ince
+              </option>
+              <option value="orta">
+                orta
+              </option>
+              <option value="kalın">
+                kalın
+              </option>
+
+            </Input>
+          </Col>
+        </FormGroup>
+
+
+        <FormGroup >
+          <p>Ek Malzemeler:</p>
+          <p>En Fazla 10 malzeme seçebilirsiniz. 5tl</p>
+
+          {seçenekler.map((e, index) => {
+            return (
+              <FormGroup check inline>
+                <Input
+                  type="checkbox"
+                  name={e}
+                  key={index}
+                  onChange={setCheck}
+                />
+                <Label check>{e}</Label>
+              </FormGroup>
+            );
+          })}
+        </FormGroup>
+
+
+        <FormGroup>
+          <Label htmlFor="special-text">
+            Sipariş Notu
+          </Label>
+          <Input
+            id="special-text"
+            name="instructions"
+            placeholder="notunuzu yazınız"
+            type="text"
+          />
+        </FormGroup>
+
+     <div className="count">
+        <ButtonToolbar>
+          <ButtonGroup >
+            <Button onClick={azalt}>
+              -
+            </Button>
+
+            <Input
+              type="number"
+              
+              value={counter} />
+
+            <Button onClick={arttır}>
+              +
+            </Button>
+          </ButtonGroup>
+        </ButtonToolbar>
+        </div> 
       
-      
+
+
+      <FormGroup >
+        <Card
+          body
+          className="my-2"
+          style={{
+            width: "20px",
+          }}
+        >
+          <CardTitle tag="h5">Sipariş Toplamı</CardTitle>
+          <CardText>
+            Seçimler: {ekücret} TL
+            <br></br>
+            <span>Toplam: {totalPrice} TL </span>
+          </CardText>
+        </Card>
+      </FormGroup>
+      </div>
+
       <Link to="/order">
-      <button id="order-button"  >
-        Sipariş ver!
-      </button>
+        <button id="order-button"  >
+          Sipariş ver!
+        </button>
       </Link>
+
     </form>
   );
 
