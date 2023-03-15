@@ -4,15 +4,15 @@ import "./Form.css";
 import * as yup from "yup";
 import {
   FormGroup, CardTitle, Card, CardText,
-  ButtonToolbar, ButtonGroup, Button, Input, Label, Col
+  ButtonToolbar, ButtonGroup, Button, Input, Label, Col, FormFeedback
 } from "reactstrap"
 
 
 
 const initialValues = {
   name: "",
-  size: "",
-  dough: "",
+  boyut: "",
+  hamur: "",
   instructions: "",
   adet: 1,
   ücret: 85.50,
@@ -21,12 +21,10 @@ const initialValues = {
 
 const initialErrors = {
   name: "",
-  size: "",
-  dough: "",
+  boyut: "",
+  hamur: "",
   instructions: "",
-  adet: "",
-  ücret: "",
-  ekücret: ""
+ 
 }
 
 
@@ -54,6 +52,45 @@ const Form = () => {
   const [disabled, setDisabled] = useState(true);
   const [submit, setSubmit] = useState(false)
 
+  const [price, setPrice] = useState(data.ücret);
+  const [counter, setCounter] = useState(1);
+  const [malzemeSayısı, setMalzemeSayısı] = useState(0);
+  const perCost = 5;
+  const ekücret = perCost * malzemeSayısı
+  const totalPrice = (ekücret + price) * counter
+
+
+
+const onSubmit = (event) => {
+    event.preventDefault();
+    submit();
+  }
+
+  const kontrol = (e) => {
+    setData({ ...data, [e.target.name]: e.target.checked });
+    if (e.target.checked === true) {
+      setMalzemeSayısı(malzemeSayısı + 1);
+      setPrice(price + perCost);
+    } else {
+      setMalzemeSayısı(malzemeSayısı - 1);
+      setPrice(price - perCost);
+    }
+
+  }
+
+  const arttır = (e) => {
+    setCounter(counter + 1)
+  }
+
+  const azalt = (e) => {
+    if (counter >= 1)
+      setCounter(counter - 1)
+    if (counter <= 1)
+      setCounter(1)
+  }
+
+
+
   const validate = (name, value) => {
 
     yup
@@ -73,22 +110,16 @@ const Form = () => {
       });
   }
 
-
-  useEffect(() => {
-    schema.isValid(data).then((valid) => setDisabled(!valid));
-  }, [data]);
-
-
   const schema = yup.object().shape({
     name: yup
       .string()
       .required("bu alanı doldurmak zorunludur.")
       .min(2, "isim en az 2 karakter olmalıdır"),
-    size: yup
+    boyut: yup
       .mixed()
       .oneOf(["Küçük", "Orta", "Büyük"], "Bir tanesini seçmelisiniz.")
       .required("Seçim yapınız"),
-    dough: yup
+    hamur: yup
       .mixed()
       .oneOf(
         ["ince", "orta", "kalın"],
@@ -129,29 +160,12 @@ const Form = () => {
 
   });
 
-  const [price, setPrice] = useState(data.ücret);
-  const [counter, setCounter] = useState(1);
-  const [malzemeSayısı, setMalzemeSayısı] = useState(0);
-  const perCost = 5;
-  const ekücret = perCost * malzemeSayısı
-  const totalPrice = (ekücret + price) * counter
-
-
-
-  const setCheck = (e) => {
-    setData({ ...data, [e.target.name]: e.target.checked });
-    if (e.target.checked === true) {
-      setMalzemeSayısı(malzemeSayısı + 1);
-      setPrice(price + perCost);
-    } else {
-      setMalzemeSayısı(malzemeSayısı - 1);
-      setPrice(price - perCost);
-    }
-
-  }
-
+  useEffect(() => {
+    schema.isValid(data).then((valid) => setDisabled(!valid));
+  }, [data]);
 
   useEffect(() => {
+    console.log("hi",data)
   }, [data]);
 
   useEffect(() => {
@@ -168,25 +182,28 @@ const Form = () => {
   }, [totalPrice]);
 
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    submit();
-  }
+  
+
+  useEffect(() => {
+    console.log("errors >",errors);
+  }, [errors]);
 
 
 
-  const arttır = (e) => {
-    setCounter(counter + 1)
-  }
+  const changeHandler = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
 
-  const azalt = (e) => {
-    if (counter >= 1)
-      setCounter(counter - 1)
-    if (counter <= 1)
-      setCounter(1)
-  }
-
-
+    yup.reach(schema, e.target.name)
+      .validate(e.target.value)
+      .then((valid) => {
+        setErrors({ ...errors, [e.target.name]: "" });
+      })
+      .catch((err) => {
+        setErrors({ ...errors, [e.target.name]: err.errors[0] });
+      });
+  };
+  
+ 
 
   return (
     <form id="pizza-form" className="form-container" onSubmit={onSubmit}>
@@ -222,63 +239,48 @@ const Form = () => {
             name="name"
             placeholder="isim yazınız"
             type="text"
+            onChange={changeHandler}
+            
           />
+         
         </FormGroup>
 
-        {/*         
-        <div className="radio" >
-          <label htmlFor="kucuk">
-            <input id="kucuk" type="radio" name="boyut" />
-            Küçük
-          </label>
-        </div>
-        <div className="radio" >
-          <label htmlFor="orta">
-            <input id="orta" type="radio" name="boyut"  />
-            Orta
-          </label>
-        </div>
-        <div className="radio"  >
-          <label htmlFor="büyük">
-            <input id="büyük" type="radio" name="boyut"  />
-            Büyük
-          </label>
-        </div> */}
+        
 
         <p>Boy:</p>
 
-        <FormGroup check>
+        <FormGroup check htmlFor="size-dropdown" invalid={errors.boyut} >
           <Label check>
-            <Input type="radio" name="radio1" /> kücük
+            <Input type="radio" name="boyut" id="size-dropdown" value="Küçük" onChange={changeHandler} /> Küçük
           </Label>
         </FormGroup>
         <FormGroup check>
-          <Label check>
-            <Input type="radio" name="radio1" /> orta
+          <Label check htmlFor="size-dropdown">
+            <Input type="radio" name="boyut" id="size-dropdown" value="Orta" onChange={changeHandler} /> Orta
           </Label>
         </FormGroup>
         <FormGroup check>
-          <Label check>
-            <Input type="radio" name="radio1" /> büyük
+          <Label check htmlFor="size-dropdown">
+            <Input type="radio" name="boyut" id="size-dropdown" value="Büyük" onChange={changeHandler} /> Büyük
           </Label>
+          <FormFeedback>{errors.boyut}</FormFeedback>
         </FormGroup>
 
 
         {/* <label className="label" htmlFor="dough-dropdown">
           Hamur:
         </label>
-        <select id="dough-dropdown" name="dough" value={data.dough} onChange={handleChange}>
+        <select id="dough-dropdown" name="hamur" value={data.hamur} onChange={changeHandler}>
           <option value="">---Hangi hamur olsun?---</option>
           <option value="ince">İnce</option>
           <option value="orta">Orta</option>
           <option value="kalın">Kalın</option>
 
-        </select> */}
+        </select>  */}
 
         <FormGroup row>
           <Label
             htmlFor="dough-dropdown"
-
             sm={2}
           >
             Hamur:
@@ -286,44 +288,55 @@ const Form = () => {
           <Col sm={20}>
             <Input
               id="dough-dropdown"
-              name="select"
+              name="hamur"
               type="select"
               placeholder="---Hangi hamur olsun?---"
+              value={data.hamur}
+              onChange={changeHandler}
+              
             >
-              <option value="ince">
+              <option value="ince" >
                 ince
               </option>
-              <option value="orta">
+              <option value="orta" >
                 orta
               </option>
-              <option value="kalın">
+              <option value="kalın" >
                 kalın
               </option>
-
+              
             </Input>
           </Col>
+          <FormFeedback>{errors.hamur}</FormFeedback>
         </FormGroup>
 
-
+        
         <FormGroup >
           <p>Ek Malzemeler:</p>
           <p>En Fazla 10 malzeme seçebilirsiniz. 5tl</p>
 
+          
           {seçenekler.map((e, index) => {
             return (
-              <FormGroup check inline>
+              <div key={index}> 
+              <FormGroup check inline >
+                
                 <Input
                   type="checkbox"
                   name={e}
-                  key={index}
-                  onChange={setCheck}
+                  onChange={kontrol}
                 />
+
+
                 <Label check>{e}</Label>
+               
               </FormGroup>
+              </div>
             );
           })}
+           
         </FormGroup>
-
+       
 
         <FormGroup>
           <Label htmlFor="special-text">
@@ -334,7 +347,10 @@ const Form = () => {
             name="instructions"
             placeholder="notunuzu yazınız"
             type="text"
+            onChange={changeHandler}
+            invalid={errors.instructions}
           />
+           <FormFeedback>{errors.instructions}</FormFeedback>
         </FormGroup>
 
      <div className="count">
@@ -377,15 +393,15 @@ const Form = () => {
       </div>
 
       <Link to="/order">
-        <button id="order-button"  >
+        <button id="order-button" disabled={disabled} >
           Sipariş ver!
         </button>
       </Link>
 
     </form>
   );
+        }
+  
 
-
-}
 
 export default Form;
