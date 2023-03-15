@@ -47,6 +47,20 @@
   }
 
 
+  .pizza-info {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .ek{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 120px;
+    margin: 25px;
+  }
+
+
 
   .seçimler{
     display:flex;

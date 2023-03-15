@@ -15,7 +15,9 @@ const initialValues = {
   instructions: "",
   adet: 1,
   ücret: 85.50,
-  ekücret: ""
+  ekücret: "",
+  rate: 8.9,
+  comments:200,
 }
 
 const initialErrors = {
@@ -173,10 +175,15 @@ const Form = () => {
 
       <div className="icerik-container">
         <div className="pizza-info">
-        <h2> Position Absolute Pizza </h2>
-         
-
+        <h2> Position Absolute Acı Pizza</h2> 
+        <div className="ek"> 
+        <span>{data.rate}</span> 
+        <span>{data.comments}</span> 
         </div>
+        </div>
+         <p>Frontend Dev olarak hala position:absolute kullanıyorsan bu çok acı pizza tam sana göre.Pizza, domates, peynir ve genellikle çeşitli diğer malzemelerle kaplanmış, daha sonra geleneksel olarak odun ateşinde bir fırında yüksek sıcaklıkta pişirilen, genellikle yuvarlak, düzleştirilmiş mayalı buğday bazlı hamurdan oluşanİtalyan kökenli lezzetli bir yemektir. Küçük bir pizzaya bazen pizetta denir. </p>
+
+        
 
 
         <FormGroup>
