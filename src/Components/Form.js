@@ -7,12 +7,11 @@ import {
   ButtonToolbar, ButtonGroup, Button, Input, Label, Col, FormFeedback
 } from "reactstrap"
 
-
-
 const initialValues = {
   name: "",
   boyut: "",
   hamur: "",
+  secenekler: [],
   instructions: "",
   adet: 1,
   ücret: 85.50,
@@ -23,12 +22,11 @@ const initialErrors = {
   name: "",
   boyut: "",
   hamur: "",
+  secenekler: [],
   instructions: "",
- 
 }
 
-
-const seçenekler = [
+const secenekler = [
   "pepperoni",
   "sosis",
   "Jambon",
@@ -44,7 +42,6 @@ const seçenekler = [
   "salam",
 ];
 
-
 const Form = () => {
 
   const [data, setData] = useState(initialValues);
@@ -57,11 +54,10 @@ const Form = () => {
   const [malzemeSayısı, setMalzemeSayısı] = useState(0);
   const perCost = 5;
   const ekücret = perCost * malzemeSayısı
-  const totalPrice = (ekücret + price) * counter
+  const totalPrice = price * counter
 
 
-
-const onSubmit = (event) => {
+  const onSubmit = (event) => {
     event.preventDefault();
     submit();
   }
@@ -75,7 +71,6 @@ const onSubmit = (event) => {
       setMalzemeSayısı(malzemeSayısı - 1);
       setPrice(price - perCost);
     }
-
   }
 
   const arttır = (e) => {
@@ -89,26 +84,6 @@ const onSubmit = (event) => {
       setCounter(1)
   }
 
-
-
-  const validate = (name, value) => {
-
-    yup
-      .reach(schema, name)
-      .validate(value)
-      .then(() => {
-        setErrors({
-          ...errors,
-          [name]: "",
-        });
-      })
-      .catch((err) => {
-        setErrors({
-          ...errors,
-          [name]: err.errors[0],
-        });
-      });
-  }
 
   const schema = yup.object().shape({
     name: yup
@@ -124,48 +99,38 @@ const onSubmit = (event) => {
       .oneOf(
         ["ince", "orta", "kalın"],
         "Bir tanesini seçmelisiniz."
-      )
-      .required("Seçim yapınız"),
+      ),
+    secenekler: yup
+      .array()
+      .max(10, "En fazla 10 tane seçebilirsiniz.")
+      .default(0),
 
-    // pepperoni: yup.boolean().oneOf([true, false], ""),
-    // sosis: yup.boolean().oneOf([true, false], ""),
-    // Jambon: yup.boolean().oneOf([true, false], ""),
-    // tavuk: yup.boolean().oneOf([true, false], ""),
-    // soğan: yup.boolean().oneOf([true, false], ""),
-    // domates: yup.boolean().oneOf([true, false], ""),
-    // mısır: yup.boolean().oneOf([true, false], ""),
-    // sucuk: yup.boolean().oneOf([true, false], ""),
-    // jalepeno: yup.boolean().oneOf([true, false], ""),
-    // sarımsak: yup.boolean().oneOf([true, false], ""),
-    // biber: yup.boolean().oneOf([true, false], ""),
-    // ananas: yup.boolean().oneOf([true, false], ""),
-    // kabak: yup.boolean().oneOf([true, false], ""),
-    // salam: yup.boolean().oneOf([true, false], ""),
-    // instructions: yup.string(),
 
-    adet: yup
-      .number()
-      .required("fazla seçim yapabilirsiniz.")
-      .min(1, "Bir adetten fazla seçebilirsiniz"),
-
-    ücret: yup
-      .number()
-      .required()
-      .min(85.50, "Ek seçeneklerle fiyat artacaktır."),
-
-    ekücret: yup
-      .number()
-      .required()
-      .min(0, "Seçimleriniz fiyata eklenecektir."),
-
+    instructions: yup
+      .string()
+      .required("bu alanı doldurmak zorunludur.")
   });
+
+  const changeHandler = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+
+    yup.reach(schema, e.target.name)
+      .validate(e.target.value)
+      .then((valid) => {
+        setErrors({ ...errors, [e.target.name]: "" });
+      })
+      .catch((err) => {
+        setErrors({ ...errors, [e.target.name]: err.errors[0] });
+      });
+
+  };
 
   useEffect(() => {
     schema.isValid(data).then((valid) => setDisabled(!valid));
   }, [data]);
 
   useEffect(() => {
-    console.log("hi",data)
+    console.log("hi", data)
   }, [data]);
 
   useEffect(() => {
@@ -182,28 +147,10 @@ const onSubmit = (event) => {
   }, [totalPrice]);
 
 
-  
-
   useEffect(() => {
-    console.log("errors >",errors);
+    console.log("errors >", errors);
   }, [errors]);
 
-
-
-  const changeHandler = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-
-    yup.reach(schema, e.target.name)
-      .validate(e.target.value)
-      .then((valid) => {
-        setErrors({ ...errors, [e.target.name]: "" });
-      })
-      .catch((err) => {
-        setErrors({ ...errors, [e.target.name]: err.errors[0] });
-      });
-  };
-  
- 
 
   return (
     <form id="pizza-form" className="form-container" onSubmit={onSubmit}>
@@ -214,7 +161,7 @@ const onSubmit = (event) => {
             Anasayfa
           </NavLink>
 
-          <NavLink className="seçenekler" to="/pizza">
+          <NavLink className="secenekler" to="/pizza">
             Seçenekler
           </NavLink>
 
@@ -226,13 +173,15 @@ const onSubmit = (event) => {
 
       <div className="icerik-container">
         <div className="pizza-info">
-          Position Absolute Pizza
+        <h2> Position Absolute Pizza </h2>
+         
+
         </div>
 
 
         <FormGroup>
           <Label htmlFor="name-input">
-            isim:
+          <h3>İsim: </h3>
           </Label>
           <Input
             id="name-input"
@@ -240,107 +189,109 @@ const onSubmit = (event) => {
             placeholder="isim yazınız"
             type="text"
             onChange={changeHandler}
-            
+            value={data.name}
+            invalid={errors.name}
+            data-cy="name-input"
+
           />
-         
+          <FormFeedback>{errors.name}</FormFeedback>
+
         </FormGroup>
 
-        
+        <div className="seçimler">
+          <div className="seçim-1">
 
-        <p>Boy:</p>
-
-        <FormGroup check htmlFor="size-dropdown" invalid={errors.boyut} >
-          <Label check>
-            <Input type="radio" name="boyut" id="size-dropdown" value="Küçük" onChange={changeHandler} /> Küçük
-          </Label>
-        </FormGroup>
-        <FormGroup check>
-          <Label check htmlFor="size-dropdown">
-            <Input type="radio" name="boyut" id="size-dropdown" value="Orta" onChange={changeHandler} /> Orta
-          </Label>
-        </FormGroup>
-        <FormGroup check>
-          <Label check htmlFor="size-dropdown">
-            <Input type="radio" name="boyut" id="size-dropdown" value="Büyük" onChange={changeHandler} /> Büyük
-          </Label>
-          <FormFeedback>{errors.boyut}</FormFeedback>
-        </FormGroup>
-
-
-        {/* <label className="label" htmlFor="dough-dropdown">
-          Hamur:
-        </label>
-        <select id="dough-dropdown" name="hamur" value={data.hamur} onChange={changeHandler}>
-          <option value="">---Hangi hamur olsun?---</option>
-          <option value="ince">İnce</option>
-          <option value="orta">Orta</option>
-          <option value="kalın">Kalın</option>
-
-        </select>  */}
-
-        <FormGroup row>
-          <Label
-            htmlFor="dough-dropdown"
-            sm={2}
-          >
-            Hamur:
-          </Label>
-          <Col sm={20}>
-            <Input
-              id="dough-dropdown"
-              name="hamur"
-              type="select"
-              placeholder="---Hangi hamur olsun?---"
-              value={data.hamur}
-              onChange={changeHandler}
-              
+            <Label
+              htmlFor="size-dropdown"
+              sm={2}
             >
-              <option value="ince" >
-                ince
-              </option>
-              <option value="orta" >
-                orta
-              </option>
-              <option value="kalın" >
-                kalın
-              </option>
-              
-            </Input>
-          </Col>
-          <FormFeedback>{errors.hamur}</FormFeedback>
-        </FormGroup>
+              <h3>Boy:</h3>
+            </Label>
 
-        
+            <FormGroup check htmlFor="size-dropdown" >
+              <Label check>
+                <Input type="radio" name="boyut" id="size-dropdown" value="Küçük" data-cy="size-dropdown" invalid={errors.boyut} onChange={changeHandler} /> Küçük
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check htmlFor="size-dropdown">
+                <Input type="radio" name="boyut" id="size-dropdown" value="Orta" data-cy="size-dropdown" invalid={errors.boyut} onChange={changeHandler} /> Orta
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check htmlFor="size-dropdown">
+                <Input type="radio" name="boyut" id="size-dropdown" value="Büyük" data-cy="size-dropdown" invalid={errors.boyut} onChange={changeHandler} /> Büyük
+              </Label>
+              <FormFeedback>{errors.boyut}</FormFeedback>
+
+            </FormGroup>
+          </div>
+
+
+          <FormGroup >
+            <Label
+              htmlFor="dough-dropdown"
+              sm={2}
+            >
+              <h3>Hamur: </h3>
+            </Label>
+            <Col sm={20}>
+              <Input
+                id="dough-dropdown"
+                name="hamur"
+                type="select"
+                placeholder="---Hangi hamur olsun?---"
+                value={data.hamur}
+                onChange={changeHandler}
+                data-cy="dough-dropdown"
+
+              >
+                <option value="ince" >
+                  ince
+                </option>
+                <option value="orta" >
+                  orta
+                </option>
+                <option value="kalın" >
+                  kalın
+                </option>
+
+              </Input>
+            </Col>
+            <FormFeedback>{errors.hamur}</FormFeedback>
+          </FormGroup>
+        </div>
+
+
         <FormGroup >
-          <p>Ek Malzemeler:</p>
+          <h3>Ek Malzemeler:</h3>
           <p>En Fazla 10 malzeme seçebilirsiniz. 5tl</p>
 
-          
-          {seçenekler.map((e, index) => {
+
+          {secenekler.map((e, index) => {
             return (
-              <div key={index}> 
-              <FormGroup check inline >
-                
-                <Input
-                  type="checkbox"
-                  name={e}
-                  onChange={kontrol}
-                />
+              <div key={index}>
+                <FormGroup check inline >
 
+                  <Input
+                    type="checkbox"
+                    name={e}
+                    onChange={kontrol}
+                  />
 
-                <Label check>{e}</Label>
-               
-              </FormGroup>
+                  <Label check>{e} </Label>
+                  <FormFeedback>{errors.secenekler}</FormFeedback>
+                </FormGroup>
               </div>
             );
           })}
-           
+
         </FormGroup>
-       
+
 
         <FormGroup>
           <Label htmlFor="special-text">
-            Sipariş Notu
+            <h3>Sipariş Notu : </h3>
           </Label>
           <Input
             id="special-text"
@@ -348,60 +299,75 @@ const onSubmit = (event) => {
             placeholder="notunuzu yazınız"
             type="text"
             onChange={changeHandler}
+            value={data.instructions}
             invalid={errors.instructions}
+            data-cy="special-text"
           />
-           <FormFeedback>{errors.instructions}</FormFeedback>
+          <FormFeedback>{errors.instructions}</FormFeedback>
         </FormGroup>
 
-     <div className="count">
-        <ButtonToolbar>
-          <ButtonGroup >
-            <Button onClick={azalt}>
-              -
-            </Button>
+        <hr style={{ size: "2", border: "solid", width: "100%" }} />
 
-            <Input
-              type="number"
-              
-              value={counter} />
+        <div className="sayısal">
+          <ButtonToolbar >
+            <ButtonGroup >
+              <Button onClick={azalt}>
+                -
+              </Button>
+              {' '}
 
-            <Button onClick={arttır}>
-              +
-            </Button>
-          </ButtonGroup>
-        </ButtonToolbar>
-        </div> 
-      
+              <Input
+                id="count"
+                type="number"
+                value={counter} />
+              {' '}
+
+              <Button onClick={arttır} >
+                +
+              </Button>
+            </ButtonGroup>
+          </ButtonToolbar>
 
 
-      <FormGroup >
-        <Card
-          body
-          className="my-2"
-          style={{
-            width: "20px",
-          }}
-        >
-          <CardTitle tag="h5">Sipariş Toplamı</CardTitle>
-          <CardText>
-            Seçimler: {ekücret} TL
-            <br></br>
-            <span>Toplam: {totalPrice} TL </span>
-          </CardText>
-        </Card>
-      </FormGroup>
+
+          <div className="seçim-2">
+            <FormGroup >
+              <Card className="my-5"
+                style={{
+                  width: '8rem'
+                }}
+              >
+                <CardTitle> <h4 style={{ marginTop: 0 }}>Sipariş Toplamı</h4></CardTitle>
+                <CardText>
+                  <h5>Seçimler: {ekücret * counter} TL </h5>
+
+                  <h5>Toplam: {totalPrice} TL </h5>
+                </CardText>
+
+              </Card>
+
+
+              <Link to="/order">
+                <button id="order-button" data-cy="order-button" disabled={disabled} >
+                  Sipariş ver!
+                </button>
+              </Link>
+
+            </FormGroup>
+
+
+          </div>
+        </div>
+
+
       </div>
 
-      <Link to="/order">
-        <button id="order-button" disabled={disabled} >
-          Sipariş ver!
-        </button>
-      </Link>
+
 
     </form>
   );
-        }
-  
+}
+
 
 
 export default Form;

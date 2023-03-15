@@ -10,6 +10,7 @@
   }
 
   .icerik-container {
+    width: 500px;
     display: flex;
     flex-direction:column;
     justify-content: flex-start; 
@@ -27,6 +28,12 @@
     
   }
 
+  .order-title {
+    padding-bottom: 10px;
+    font-size: 3.5rem;
+  }
+
+
   .direction{
     display: flex;
     flex-direction: row;
@@ -39,26 +46,32 @@
     text-decoration: none;
   }
 
-  .radio{
-    display: flex;
-    flex-direction: column;
+
+
+  .seçimler{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
   }
 
- 
-  
-  .order-title {
-    padding-bottom: 10px;
-    font-size: 3.5rem;
+  .seçim-1{
+    display:flex;
+    flex-direction:column;
+    justify-content: flex-start;
   }
 
-  
+
+  .seçim-2{
+    width: 165px;
+    height: 100px;
+    
+  }
+
    #dough-dropdown {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: nowrap;
+    text-align: center;
     border: none;
     padding: 5px;
-    width: 200px;
+    width: 80px;
     height: 30px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   } 
@@ -66,7 +79,7 @@
  
   
   #name-input {
-    width: 300px;
+    width: 80px;
     height: 20px;
     border: none;
     padding: 5px 15px;
@@ -74,31 +87,55 @@
     text-align: center;
   }
 
+  .form-label{
+    margin-top: 30px
+  }
+
    #special-text {
-    width: 300px;
-    height: 20px;
+    width: 475px;
+    height: 100px;
     border: none;
+    margin-top: 10px;
     padding: 5px 15px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     text-align: center;
   } 
 
+  .btn.btn-secondary{
+    width: 50px;
+    height: 50px;
+    background-color:#FDC913;
+    color: white;
+    border: none;
+   
 
-  .count{
-    width: 2px;
-    display: flex;
-
-    flex-direction: row;
   }
 
+  #count{
+    text-align: center;
+    width: 50px;
+    height: 45px;
+    
+  }
 
+  .sayısal{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
 
+  }
+
+  .my-5.card{
+    width: 100px;
+    padding: 20px;
+    border: 2px solid; 
+  }
+ 
 
   #order-button {
-    margin-top: 40px;
+    width: 170px;
     border: none;
-    padding: 15px 25px;
-    
+    /* padding: 15px 25px; */
     font-family: "Italianno", sans-serif;
     font-size: 1.5rem;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;

@@ -13,7 +13,7 @@ const App = () => {
     <div className="container">
 
       <Switch>
-        <Route path={"/pizza"}>
+        <Route path="/pizza">
           <Form  />
 
         </Route>

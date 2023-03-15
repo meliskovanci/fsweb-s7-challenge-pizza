@@ -13,7 +13,7 @@ const Home = () => {
       <p>PİZZA DOYURUR</p>
      
      
-     <Link to="/pizza">
+     <Link id="order-pizza" to="/pizza" data-cy="order-pizza">
         <button className="order-btn">ACIKTIM</button>
       </Link>
       <img className="pizza-img" src="./banner.png" alt="pizza" />
