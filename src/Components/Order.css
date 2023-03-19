@@ -9,3 +9,16 @@
     align-items: center;
     padding-top: 150px;
 }
+
+
+.logo{
+    margin: 50px auto;
+    width: 30%;
+    height: 10%;
+  }
+
+
+  .order-container p {
+    margin: 5px;
+    font-size: 50px;
+  }

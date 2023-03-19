@@ -174,9 +174,12 @@ const Form = () => {
       </div>
 
       <div className="icerik-container">
-        <div className="pizza-info">
+        
         <h2> Position Absolute Acı Pizza</h2> 
-        <div className="ek"> 
+        <div className="pizza-info">
+        
+        <span>{data.ücret} TL</span> 
+        <div className="ek">
         <span>{data.rate}</span> 
         <span>{data.comments}</span> 
         </div>

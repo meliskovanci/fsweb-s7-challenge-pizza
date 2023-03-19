@@ -7,7 +7,7 @@ const Order = () => {
     return (
       
       <div className="order-container">
-        <h1>Teknolojik Yemekler</h1>
+        <img className="logo" src="./logo.svg" alt="teknolojik yemekler" />
         <p>TEBRİKLER!</p>
         <p>PİZZANIZ YOLA ÇIKTI!</p>
       

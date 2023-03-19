@@ -4,14 +4,13 @@ import "./Home.css";
 
 
 
-
 const Home = () => {
   return (
-    <div className="home-container">
-      <h1>Teknolojik Yemekler</h1>
+     <div className="home-container">
+
+    <img className="logo" src="./logo.svg" alt="teknolojik yemekler" />
       <p>KOD ACIKTIRIR</p>
       <p>PİZZA DOYURUR</p>
-     
      
      <Link id="order-pizza" to="/pizza" data-cy="order-pizza">
         <button className="order-btn">ACIKTIM</button>
