@@ -157,7 +157,7 @@ const Form = () => {
   return (
     <form id="pizza-form" className="form-container" onSubmit={onSubmit}>
       <div className="navbar">
-        <h1 className="order-title">Pizza Siparişi</h1>
+      <img className="logo" src="./logo.svg" alt="teknolojik yemekler" />
         <div className="direction">
           <NavLink className="links" to="/">
             Anasayfa
@@ -181,7 +181,7 @@ const Form = () => {
         <span>{data.ücret} TL</span> 
         <div className="ek">
         <span>{data.rate}</span> 
-        <span>{data.comments}</span> 
+        <span>({data.comments})</span> 
         </div>
         </div>
          <p>Frontend Dev olarak hala position:absolute kullanıyorsan bu çok acı pizza tam sana göre.Pizza, domates, peynir ve genellikle çeşitli diğer malzemelerle kaplanmış, daha sonra geleneksel olarak odun ateşinde bir fırında yüksek sıcaklıkta pişirilen, genellikle yuvarlak, düzleştirilmiş mayalı buğday bazlı hamurdan oluşanİtalyan kökenli lezzetli bir yemektir. Küçük bir pizzaya bazen pizetta denir. </p>

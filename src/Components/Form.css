@@ -29,10 +29,17 @@
     
   }
 
-  .order-title {
+  /* .order-title {
     padding-bottom: 10px;
     font-size: 3.5rem;
+  } */
+
+  .logo{
+    margin: 50px auto;
+    width: 30%;
+    height: 10%;
   }
+
 
 
   .direction{
